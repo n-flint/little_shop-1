@@ -81,7 +81,12 @@
 </section>
 
 <section class='default-images'>
-
+  <% if current_merchant? && current_user == @merchant %>
+    <h3>Items with a defalut image.</h3>
+    <% @default_images.each do |item| %>
+      <p><%= link_to item.name, edit_dashboard_item_path(item)  %></p>
+    <% end %>
+  <% end %>
 </section>
 
 <% if @pending_orders %>
