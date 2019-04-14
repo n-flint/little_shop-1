@@ -13,6 +13,10 @@ class User < ApplicationRecord
   # as a merchant
   has_many :items, foreign_key: 'merchant_id'
 
+  def default_images
+    items.where("image like ?", "https://picsum.photos%")
+  end
+
   def active_items
     items.where(active: true).order(:name)
   end
