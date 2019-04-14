@@ -113,11 +113,7 @@ RSpec.describe User, type: :model do
     end
 
     it '#default_images' do
-      expect(@m1.default_images[0].name).to eq(@i5.name)
-      expect(@m1.default_images[1].name).to eq(@i6.name)
-      expect(@m1.default_images[2].name).to eq(@i7.name)
-      expect(@m1.default_images[3].name).to eq(@i8.name)
-      expect(@m1.default_images[4].name).to eq(@i9.name)
+      expect(@m1.default_images).to eq([@i5, @i6, @i7, @i8, @i9])
     end
 
     it '.active_items' do
