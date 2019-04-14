@@ -76,10 +76,10 @@ RSpec.describe User, type: :model do
       u6 = create(:user, state: "IA", city: "Des Moines")
 
       @m1 = create(:merchant)
-      @i1 = create(:item, merchant_id: @m1.id, inventory: 20)
-      @i2 = create(:item, merchant_id: @m1.id, inventory: 20)
-      @i3 = create(:item, merchant_id: @m1.id, inventory: 20)
-      @i4 = create(:item, merchant_id: @m1.id, inventory: 20)
+      @i1 = create(:item, merchant_id: @m1.id, inventory: 20, image: 'https://target.scene7.com/is/image/Target/GUEST_848c9bef-75a4-4372-896d-4207a2278983?wid=488&hei=488&fmt=pjpeg')
+      @i2 = create(:item, merchant_id: @m1.id, inventory: 20, image: 'https://target.scene7.com/is/image/Target/GUEST_848c9bef-75a4-4372-896d-4207a2278983?wid=488&hei=488&fmt=pjpeg')
+      @i3 = create(:item, merchant_id: @m1.id, inventory: 20, image: 'https://target.scene7.com/is/image/Target/GUEST_848c9bef-75a4-4372-896d-4207a2278983?wid=488&hei=488&fmt=pjpeg')
+      @i4 = create(:item, merchant_id: @m1.id, inventory: 20, image: 'https://target.scene7.com/is/image/Target/GUEST_848c9bef-75a4-4372-896d-4207a2278983?wid=488&hei=488&fmt=pjpeg')
       @i5 = create(:item, merchant_id: @m1.id, inventory: 20)
       @i6 = create(:item, merchant_id: @m1.id, inventory: 20)
       @i7 = create(:item, merchant_id: @m1.id, inventory: 20)
@@ -110,6 +110,14 @@ RSpec.describe User, type: :model do
       @oi5.fulfill
       @oi6.fulfill
       @oi7.fulfill
+    end
+
+    it '#default_images' do
+      expect(@m1.default_images[0].name).to eq(@i5.name)
+      expect(@m1.default_images[1].name).to eq(@i6.name)
+      expect(@m1.default_images[2].name).to eq(@i7.name)
+      expect(@m1.default_images[3].name).to eq(@i8.name)
+      expect(@m1.default_images[4].name).to eq(@i9.name)
     end
 
     it '.active_items' do
