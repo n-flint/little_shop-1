@@ -17,6 +17,12 @@ class User < ApplicationRecord
     items.where("image like ?", "https://picsum.photos%")
   end
 
+  def revenue_impact
+    items.joins(:order_items)
+    .where(order_items: {fulfilled: false})
+    .sum('order_items.quantity * order_items.price')
+  end
+
   def active_items
     items.where(active: true).order(:name)
   end
