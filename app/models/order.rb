@@ -7,6 +7,13 @@ class Order < ApplicationRecord
 
   enum status: [:pending, :packaged, :shipped, :cancelled]
 
+  # def no_inventory(merchant)
+  #   test = order_items.joins(:items)
+  #               .where('order_items.quantity > items.inventory')
+  #               .where('items.merchant_id = ?', merchant.id)
+  #   # require 'pry'; binding.pry
+  # end
+
   def total_item_count
     order_items.sum(:quantity)
   end
