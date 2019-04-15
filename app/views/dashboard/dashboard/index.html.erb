@@ -89,6 +89,12 @@
   <% end %>
 </section>
 
+<section class='unfulfilled-items'>
+  <% if @pending_orders %>
+    <h4>You have <%= @pending_orders.count %> unfulfilled orders worth <%= number_to_currency(@merchant.revenue_impact) %></h4>
+  <% end %>
+</section>
+
 <% if @pending_orders %>
   <table class="table">
     <thead>
