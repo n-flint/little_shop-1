@@ -73,9 +73,11 @@
 <section>
   <p>
   <% if current_merchant? && current_user == @merchant %>
-  <%= link_to 'Items for Sale', dashboard_items_path %>
+    <%= link_to 'Items for Sale', dashboard_items_path %>
+    <%= link_to 'Existing Customers', dashboard_download_existing_path(format: "csv") %>
+    <%= link_to 'Potential Customers', dashboard_download_potential_path(format: "csv") %>
   <% elsif current_admin? %>
-  <%= link_to 'Items for Sale', admin_merchant_items_path(@merchant) %>
+    <%= link_to 'Items for Sale', admin_merchant_items_path(@merchant) %>
   <% end %>
   </p>
 </section>
