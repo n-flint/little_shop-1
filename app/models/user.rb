@@ -155,4 +155,16 @@ class User < ApplicationRecord
         .order('order_count DESC')
         .limit(limit)
   end
+
+  #not sure how to test this method with a model test
+  def self.to_csv
+    CSV.generate(headers: :true) do |csv| 
+      attributes = %w{name email}
+        csv << attributes
+
+      all.each do |user|
+        csv << user.attributes.values_at(*attributes)
+      end
+    end
+  end
 end
