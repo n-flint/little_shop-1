@@ -19,7 +19,7 @@ class Dashboard::DashboardController < Dashboard::BaseController
     @users = User.potential_customers(merchant.id)
     
     respond_to do |format|
-      format.csv { send_data @users.potential_to_csv}
+      format.csv { send_data @users.potential_to_csv(merchant.id)}
     end
   end
 end
