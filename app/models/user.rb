@@ -197,6 +197,6 @@ class User < ApplicationRecord
   end
 
   def self.potential_customers(merchant_id)
-    User.joins(order_items: :item).where.not('items.merchant_id = ?', merchant_id)
+    User.joins(order_items: :item).where.not('items.merchant_id =?', merchant_id).distinct.order(:name)
   end
 end
