@@ -118,10 +118,9 @@
           <td><%= order.total_quantity_for_merchant(@merchant.id) %></td>
           <td><%= order.total_price_for_merchant(@merchant.id) %></td>
 
-          <%# <% if order.no_inventory(@merchant)  %>
-            <%# <td>This quantity exceeds your inventory</td> %>
-          <%# <% end %> %> %>
-
+          <% if order.no_inventory(@merchant)%>
+            <td>An item in this order exceeds your inventory</td>
+          <% end %>
         </tr>
       <% end %>
     </tbody>
