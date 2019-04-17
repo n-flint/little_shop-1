@@ -7,19 +7,19 @@ class Dashboard::DashboardController < Dashboard::BaseController
 
   def existing
     merchant = current_user if current_merchant?
-    @users = User.existing_customers(merchant.id)
+    users = User.existing_customers(merchant.id)
     
     respond_to do |format|
-      format.csv { send_data @users.existing_to_csv(merchant.id)}
+      format.csv { send_data users.existing_to_csv(merchant.id)}
     end
   end
   
   def potential
     merchant = current_user if current_merchant?
-    @users = User.potential_customers(merchant.id)
+    users = User.potential_customers(merchant.id)
     
     respond_to do |format|
-      format.csv { send_data @users.potential_to_csv(merchant.id)}
+      format.csv { send_data users.potential_to_csv(merchant.id)}
     end
   end
 end
