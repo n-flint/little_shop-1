@@ -59,7 +59,7 @@ RSpec.describe Order, type: :model do
       oi5 = create(:fulfilled_order_item, order: @o5)
 
       @o6 = create(:shipped_order, user: user)
-      oi2 = create(:fulfilled_order_item, order: @o6)
+      # oi2 = create(:fulfilled_order_item, order: @o6)
 
       @o7, @o8 = create_list(:order, 2, user: user)
       create(:order_item, order: @o7, item: @i1)
@@ -100,7 +100,7 @@ RSpec.describe Order, type: :model do
     end
 
     it '.sorted_by_items_shipped' do
-      expect(Order.sorted_by_items_shipped).to eq([@o6, @o5, @o4, @o3, @o2, @o1])
+      expect(Order.sorted_by_items_shipped).to eq([@o5, @o4, @o3, @o2, @o1])
     end
   end
 
