@@ -193,11 +193,10 @@ class User < ApplicationRecord
   end
 
   def self.existing_customers(merchant_id)
-    # User.joins(order_items: :item).where('items.merchant_id = ?, users.active = ?', merchant_id).distinct
-    User.joins(order_items: :item).where('items.merchant_id = ?', merchant_id).where(active: :true).distinct
+    User.joins(order_items: :item).where('items.merchant_id = ?', merchant_id).where(active: true).distinct.order(:name)
   end
 
   def self.potential_customers(merchant_id)
-    User.joins(order_items: :item).where.not('items.merchant_id =?', merchant_id).distinct.order(:name)
+    User.joins(order_items: :item).where('items.merchant_id !=?', merchant_id).distinct.order(:name).where(active: true)
   end
 end
