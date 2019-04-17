@@ -97,14 +97,15 @@ class User < ApplicationRecord
   end
 
   def total_for_merchant(merchant_id)
-    # require 'pry'; binding.pry
-    # items.joins(:order_items).where('items.merchant_id = ?', merchant_id)
-    # order_items.joins(:item).select("order_items.*, sum(order_items.price) AS total_spent").where('items.merchant_id =?', merchant_id)
+    order_items.joins(:item).where('items.merchant_id =?', merchant_id).sum(:price)
   end
 
   def total_for_all
-    # order_items.sum(:price)
-    # require 'pry'; binding.pry
+    order_items.sum(:price)
+  end
+
+  def num_ordered
+    orders.count
   end
 
   def self.active_merchants
@@ -179,26 +180,23 @@ class User < ApplicationRecord
     end
   end
 
-  def self.potential_to_csv
+  def self.potential_to_csv(merchant_id)
     CSV.generate(headers: :true) do |csv| 
       attributes = ['name', 'email', 'ammount sold to all other merchants', 'total number of orders']
 
-        csv << attributes
+      csv << attributes
 
       all.each do |user|
-        csv << [user.name, user.email]        
-        csv << user.attributes.values_at(*attributes)
+        csv << [user.name, user.email, user.total_for_all, user.num_ordered]        
       end
     end
   end
 
   def self.existing_customers(merchant_id)
-    User.joins(order_items: :item).where('items.merchant_id = ?', merchant_id)
-    require 'pry'; binding.pry
+    User.joins(order_items: :item).where('items.merchant_id = ?', merchant_id).distinct
   end
 
   def self.potential_customers(merchant_id)
-    User.joins(order_items: :item).where('items.merchant_id != ?', merchant_id)
-    require 'pry'; binding.pry
+    User.joins(order_items: :item).where.not('items.merchant_id = ?', merchant_id)
   end
 end
