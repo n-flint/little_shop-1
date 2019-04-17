@@ -96,6 +96,17 @@ class User < ApplicationRecord
          .limit(1).first
   end
 
+  def total_for_merchant(merchant_id)
+    # require 'pry'; binding.pry
+    # items.joins(:order_items).where('items.merchant_id = ?', merchant_id)
+    # order_items.joins(:item).select("order_items.*, sum(order_items.price) AS total_spent").where('items.merchant_id =?', merchant_id)
+  end
+
+  def total_for_all
+    # order_items.sum(:price)
+    # require 'pry'; binding.pry
+  end
+
   def self.active_merchants
     where(role: :merchant, active: true)
   end
@@ -157,14 +168,37 @@ class User < ApplicationRecord
   end
 
   #not sure how to test this method with a model test
-  def self.to_csv
+  def self.existing_to_csv(merchant_id)
     CSV.generate(headers: :true) do |csv| 
-      attributes = %w{name email}
+       attributes = ['name', 'email', 'ammount sold from this merchant', 'amount sold to all other merchants']
         csv << attributes
 
       all.each do |user|
+        csv << [user.name, user.email, user.total_for_merchant(merchant_id), user.total_for_all]
+      end
+    end
+  end
+
+  def self.potential_to_csv
+    CSV.generate(headers: :true) do |csv| 
+      attributes = ['name', 'email', 'ammount sold to all other merchants', 'total number of orders']
+
+        csv << attributes
+
+      all.each do |user|
+        csv << [user.name, user.email]        
         csv << user.attributes.values_at(*attributes)
       end
     end
+  end
+
+  def self.existing_customers(merchant_id)
+    User.joins(order_items: :item).where('items.merchant_id = ?', merchant_id)
+    require 'pry'; binding.pry
+  end
+
+  def self.potential_customers(merchant_id)
+    User.joins(order_items: :item).where('items.merchant_id != ?', merchant_id)
+    require 'pry'; binding.pry
   end
 end
