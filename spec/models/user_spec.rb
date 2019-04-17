@@ -345,7 +345,7 @@ RSpec.describe User, type: :model do
       end
     end
     it '.existing_customers' do
-      u1 = create(:user, state: "CO", city: "Fairfield")
+      u1 = create(:user, state: "CO", city: "Fairfield", name: 'zak')
       u2 = create(:user, state: "OK", city: "OKC")
       u3 = create(:user, state: "IA", city: "Fairfield")
       u4 = create(:user, state: "IA", city: "Des Moines")
@@ -375,7 +375,7 @@ RSpec.describe User, type: :model do
       oi6 = create(:fulfilled_order_item, item: i6, order: o6, created_at: 3.days.ago)
       oi7 = create(:fulfilled_order_item, item: i7, order: o7, created_at: 3.days.ago)
 
-      expect(User.existing_customers(m1.id)).to eq([u1, u2])
+      expect(User.existing_customers(m1.id)).to eq([u2, u1])
     end
 
     it '.potential_customers' do
@@ -385,6 +385,8 @@ RSpec.describe User, type: :model do
       u4 = create(:user, state: "IA", city: "Des Moines")
       u5 = create(:user, state: "IA", city: "Des Moines")
       u6 = create(:user, state: "IA", city: "Des Moines")
+      u7 = create(:inactive_user, state: "IA", city: "Des Moines")
+
       m1, m2, m3, m4, m5, m6, m7 = create_list(:merchant, 7)
       i1 = create(:item, merchant_id: m1.id)
       i2 = create(:item, merchant_id: m2.id)
@@ -392,19 +394,22 @@ RSpec.describe User, type: :model do
       i4 = create(:item, merchant_id: m2.id)
       i5 = create(:item, merchant_id: m3.id)
       i6 = create(:item, merchant_id: m3.id)
-      i7 = create(:item, merchant_id: m7.id)
+      i7 = create(:item, merchant_id: m4.id)
       o1 = create(:shipped_order, user: u1)
       o2 = create(:shipped_order, user: u2)
       o3 = create(:shipped_order, user: u3)
       o4 = create(:shipped_order, user: u4)
       o5 = create(:cancelled_order, user: u5)
       o6 = create(:shipped_order, user: u6)
+      o7 = create(:shipped_order, user: u7)
+
       oi1 = create(:fulfilled_order_item, item: i1, order: o1, created_at: 1.days.ago)
       oi2 = create(:fulfilled_order_item, item: i2, order: o2, created_at: 7.days.ago)
       oi3 = create(:fulfilled_order_item, item: i3, order: o3, created_at: 6.days.ago)
       oi4 = create(:fulfilled_order_item, item: i4, order: o4, created_at: 4.days.ago)
       oi5 = create(:fulfilled_order_item, item: i5, order: o5, created_at: 5.days.ago)
       oi6 = create(:fulfilled_order_item, item: i6, order: o6, created_at: 3.days.ago)
+      oi7 = create(:fulfilled_order_item, item: i7, order: o7, created_at: 3.days.ago)
 
       expect(User.potential_customers(m1.id)).to eq([u2, u3, u4, u5, u6])
     end
