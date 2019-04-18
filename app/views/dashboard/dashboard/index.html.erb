@@ -92,6 +92,9 @@
 <section class='unfulfilled-items'>
   <% if @pending_orders %>
     <h4>You have <%= @pending_orders.count %> unfulfilled orders worth <%= number_to_currency(@merchant.revenue_impact) %></h4>
+    <% @merchant.low_inventory.each do |item| %>
+    <h4>Multiple Orders Exist For <%= item.name %>: Exceeds Inventory" </h4>
+    <% end %>
   <% end %>
 </section>
 
