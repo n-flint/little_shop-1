@@ -197,6 +197,6 @@ class User < ApplicationRecord
   end
 
   def self.potential_customers(merchant_id)
-    User.joins(order_items: :item).where('items.merchant_id !=?', merchant_id).distinct.order(:name).where(active: true)
+    User.where.not(name: existing_customers(merchant_id).pluck(:name)).where({active: true, role: 0}).order(:name)
   end
 end
