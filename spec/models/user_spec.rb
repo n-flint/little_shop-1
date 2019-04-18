@@ -138,6 +138,28 @@ RSpec.describe User, type: :model do
 
       expect(merchant_1.revenue_impact).to eq(600)
     end
+    it '#low_inventory' do
+      merchant_1 = create(:merchant)
+      merchant_2 = create(:merchant)
+      item_1 = create(:item, name: "Item 1", price: 50, inventory: 10, user: merchant_1)
+      item_2 = create(:item, name: "Item 2", price: 20, inventory: 10, user: merchant_1)
+      item_3 = create(:item, name: "Item 3", price: 70, inventory: 10, user: merchant_1)
+      item_4 = create(:item, name: "Item 3", price: 70, inventory: 10, user: merchant_2)
+
+      user = create(:user)
+      order_1 = create(:order, user: user)
+      order_2 = create(:order, user: user)
+      order_3 = create(:order, user: user)
+      order_4 = create(:order, user: user)
+      shipped_order_5 = create(:shipped_order, user: user)
+      create(:order_item, order: order_1, item: item_1, quantity: 10, price: 10)
+      create(:order_item, order: order_2, item: item_2, quantity: 5, price: 20)
+      create(:order_item, order: order_3, item: item_1, quantity: 10, price: 30)
+      create(:order_item, order: order_4, item: item_2, quantity: 5, price: 40)
+      create(:fulfilled_order_item, order: shipped_order_5, item: item_4, quantity: 5, price: 50)
+
+      expect(merchant_1.low_inventory).to eq([item_1])
+    end
 
     it '.active_items' do
       expect(@m2.active_items).to eq([@i10])
