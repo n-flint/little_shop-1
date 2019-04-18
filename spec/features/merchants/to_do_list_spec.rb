@@ -98,22 +98,24 @@ RSpec.describe 'Merchant Dashboard To-Do List' do
     end
     
 
-    xit 'sees a warning if multiple orders exist for single item with quantity abouve merchants inventory' do
+    it 'sees a warning if multiple orders exist for single item with quantity abouve merchants inventory' do
       merchant_1 = create(:merchant)
       item_1 = create(:item, name: "Item 1", price: 50, inventory: 10, user: merchant_1)
+      item_2 = create(:item, name: "Item 1", price: 50, inventory: 10, user: merchant_1)
       user = create(:user)
       order_1 = create(:order, user: user)
       order_2 = create(:order, user: user)
 
       create(:order_item, order: order_1, item: item_1, quantity: 10, price: 500)
       create(:order_item, order: order_2, item: item_1, quantity: 10, price: 500)
+      create(:order_item, order: order_2, item: item_2, quantity: 10, price: 500)
 
       allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(merchant_1)
 
       visit dashboard_path
-      save_and_open_page
-      within "#order-#{order_1.id}" do
-        expect(page).to have_content('Multiple Orders Exist For This Item, Exceeds Inventory')
+      
+      within '.unfulfilled-items' do
+        expect(page).to have_content("Multiple Orders Exist For #{item_1.name}: Exceeds Inventory")
       end
     end
   end
