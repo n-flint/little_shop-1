@@ -96,6 +96,18 @@ class User < ApplicationRecord
          .limit(1).first
   end
 
+  def total_for_merchant(merchant_id)
+    order_items.joins(:item).where('items.merchant_id =?', merchant_id).sum(:price)
+  end
+
+  def total_for_all
+    order_items.sum(:price)
+  end
+
+  def num_ordered
+    orders.count
+  end
+
   def self.active_merchants
     where(role: :merchant, active: true)
   end
@@ -154,5 +166,37 @@ class User < ApplicationRecord
         .select('users.city, users.state, count(orders.id) AS order_count')
         .order('order_count DESC')
         .limit(limit)
+  end
+
+  #not sure how to test this method with a model test
+  def self.existing_to_csv(merchant_id)
+    CSV.generate(headers: :true) do |csv| 
+       attributes = ['name', 'email', 'ammount sold from this merchant', 'amount sold to all other merchants']
+        csv << attributes
+
+      all.each do |user|
+        csv << [user.name, user.email, user.total_for_merchant(merchant_id), user.total_for_all]
+      end
+    end
+  end
+
+  def self.potential_to_csv(merchant_id)
+    CSV.generate(headers: :true) do |csv| 
+      attributes = ['name', 'email', 'ammount sold to all other merchants', 'total number of orders']
+
+      csv << attributes
+
+      all.each do |user|
+        csv << [user.name, user.email, user.total_for_all, user.num_ordered]        
+      end
+    end
+  end
+
+  def self.existing_customers(merchant_id)
+    User.joins(order_items: :item).where('items.merchant_id = ?', merchant_id).where(active: true).distinct.order(:name)
+  end
+
+  def self.potential_customers(merchant_id)
+    User.where.not(name: existing_customers(merchant_id).pluck(:name)).where({active: true, role: 0}).order(:name)
   end
 end

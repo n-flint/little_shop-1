@@ -8,7 +8,8 @@ Item.destroy_all
 User.destroy_all
 
 admin = create(:admin)
-user = create(:user)
+user_1 = create(:user)
+user_2 = create(:user)
 merchant_1 = create(:merchant)
 
 merchant_2, merchant_3, merchant_4 = create_list(:merchant, 3)
@@ -25,30 +26,28 @@ create_list(:item, 10, user: merchant_1)
 inactive_item_1 = create(:inactive_item, user: merchant_1)
 inactive_item_2 = create(:inactive_item, user: inactive_merchant_1)
 
-# Random.new_seed
-# rng = Random.new
+Random.new_seed
+rng = Random.new
 
-# order = create(:completed_order, user: user)
-# create(:fulfilled_order_item, order: order, item: item_1, price: 1, quantity: 1, created_at: (rng.rand(3)+1).days.ago, updated_at: rng.rand(59).minutes.ago)
-# create(:fulfilled_order_item, order: order, item: item_2, price: 2, quantity: 1, created_at: (rng.rand(23)+1).hour.ago, updated_at: rng.rand(59).minutes.ago)
-# create(:fulfilled_order_item, order: order, item: item_3, price: 3, quantity: 1, created_at: (rng.rand(5)+1).days.ago, updated_at: rng.rand(59).minutes.ago)
-# create(:fulfilled_order_item, order: order, item: item_4, price: 4, quantity: 1, created_at: (rng.rand(23)+1).hour.ago, updated_at: rng.rand(59).minutes.ago)
+order_1 = create(:shipped_order, user: user_1)
+order_2 = create(:shipped_order, user: user_2)
+create(:fulfilled_order_item, order: order_1, item: item_1, price: 1, quantity: 1, created_at: (rng.rand(3)+1).days.ago, updated_at: rng.rand(59).minutes.ago)
+create(:fulfilled_order_item, order: order_1, item: item_2, price: 2, quantity: 1, created_at: (rng.rand(23)+1).hour.ago, updated_at: rng.rand(59).minutes.ago)
+create(:fulfilled_order_item, order: order_2, item: item_3, price: 3, quantity: 1, created_at: (rng.rand(5)+1).days.ago, updated_at: rng.rand(59).minutes.ago)
+create(:fulfilled_order_item, order: order_2, item: item_4, price: 4, quantity: 1, created_at: (rng.rand(23)+1).hour.ago, updated_at: rng.rand(59).minutes.ago)
 
-# # pending order
-# order = create(:order, user: user)
-# create(:order_item, order: order, item: item_1, price: 1, quantity: 1)
-# create(:fulfilled_order_item, order: order, item: item_2, price: 2, quantity: 1, created_at: (rng.rand(23)+1).days.ago, updated_at: rng.rand(23).hours.ago)
+# pending order
+order = create(:order, user: user_1)
+create(:order_item, order: order, item: item_1, price: 1, quantity: 1)
+create(:fulfilled_order_item, order: order, item: item_2, price: 2, quantity: 1, created_at: (rng.rand(23)+1).days.ago, updated_at: rng.rand(23).hours.ago)
 
-# order = create(:cancelled_order, user: user)
-# create(:order_item, order: order, item: item_2, price: 2, quantity: 1, created_at: (rng.rand(23)+1).hour.ago, updated_at: rng.rand(59).minutes.ago)
-# create(:order_item, order: order, item: item_3, price: 3, quantity: 1, created_at: (rng.rand(23)+1).hour.ago, updated_at: rng.rand(59).minutes.ago)
+order = create(:cancelled_order, user: user_1)
+create(:order_item, order: order, item: item_2, price: 2, quantity: 1, created_at: (rng.rand(23)+1).hour.ago, updated_at: rng.rand(59).minutes.ago)
+create(:order_item, order: order, item: item_3, price: 3, quantity: 1, created_at: (rng.rand(23)+1).hour.ago, updated_at: rng.rand(59).minutes.ago)
 
-# order = create(:completed_order, user: user)
-# create(:fulfilled_order_item, order: order, item: item_1, price: 1, quantity: 1, created_at: (rng.rand(4)+1).days.ago, updated_at: rng.rand(59).minutes.ago)
-# create(:fulfilled_order_item, order: order, item: item_2, price: 2, quantity: 1, created_at: (rng.rand(23)+1).hour.ago, updated_at: rng.rand(59).minutes.ago)
-
-
-
+order = create(:shipped_order, user: user_1)
+create(:fulfilled_order_item, order: order, item: item_1, price: 1, quantity: 1, created_at: (rng.rand(4)+1).days.ago, updated_at: rng.rand(59).minutes.ago)
+create(:fulfilled_order_item, order: order, item: item_2, price: 2, quantity: 1, created_at: (rng.rand(23)+1).hour.ago, updated_at: rng.rand(59).minutes.ago)
 
 
 puts 'seed data finished'
