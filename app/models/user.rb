@@ -13,6 +13,26 @@ class User < ApplicationRecord
   # as a merchant
   has_many :items, foreign_key: 'merchant_id'
 
+  def default_images
+    items.where("image like ?", "https://picsum.photos%")
+  end
+
+  def revenue_impact
+    items.joins(:order_items)
+    .where(order_items: {fulfilled: false})
+    .sum('order_items.quantity * order_items.price')
+  end
+
+  def low_inventory
+    items.joins(:orders)
+          .select('items.*, items.inventory - SUM (order_items.quantity) AS remaining_quantity')
+          .where(orders: {status: :pending})
+          .group(:id)
+          .having('items.inventory - SUM (order_items.quantity) < 0')
+
+    # require 'pry'; binding.pry
+  end
+
   def active_items
     items.where(active: true).order(:name)
   end

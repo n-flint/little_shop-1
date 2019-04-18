@@ -155,5 +155,22 @@ RSpec.describe Order, type: :model do
 
       expect(order.order_items_for_merchant(merchant1.id)).to eq([oi1, oi3])
     end
+
+    it '.no_inventory' do
+      merchant1 = create(:merchant)
+      merchant2 = create(:merchant)
+      user = create(:user)
+      order = create(:order, user: user)
+
+      item1 = create(:item, user: merchant1, inventory: 5, price: 10)
+      item2 = create(:item, user: merchant2, inventory: 10, price: 10)
+      # item3 = create(:item, user: merchant1, inventory: 15, price: 10)
+      oi1 = create(:order_item, order: order, item: item1, quantity: 5, price: 50)
+      oi2 = create(:order_item, order: order, item: item2, quantity: 20, price: 200)
+      oi3 = create(:order_item, order: order, item: item1, quantity: 1, price: 10)
+
+      expect(order.no_inventory(merchant1.id).count).to eq(0)
+      expect(order.no_inventory(merchant2.id).count).to eq(1)
+    end
   end
 end

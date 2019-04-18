@@ -80,6 +80,24 @@
   </p>
 </section>
 
+<section class='default-images'>
+  <% if current_merchant? && current_user == @merchant %>
+    <h3>Items with a defalut image.</h3>
+    <% @default_images.each do |item| %>
+      <p><%= link_to item.name, edit_dashboard_item_path(item)  %></p>
+    <% end %>
+  <% end %>
+</section>
+
+<section class='unfulfilled-items'>
+  <% if @pending_orders %>
+    <h4>You have <%= @pending_orders.count %> unfulfilled orders worth <%= number_to_currency(@merchant.revenue_impact) %></h4>
+    <% @merchant.low_inventory.each do |item| %>
+    <h4>Multiple Orders Exist For <%= item.name %>: Exceeds Inventory" </h4>
+    <% end %>
+  <% end %>
+</section>
+
 <% if @pending_orders %>
   <table class="table">
     <thead>
@@ -88,6 +106,7 @@
         <th>Created Date</th>
         <th>Quantity</th>
         <th>Price</th>
+        <th>Warning</th>
       </tr>
     </thead>
     <tbody>
@@ -101,6 +120,10 @@
           <td><%= order.created_at %></td>
           <td><%= order.total_quantity_for_merchant(@merchant.id) %></td>
           <td><%= order.total_price_for_merchant(@merchant.id) %></td>
+
+          <% if order.no_inventory(@merchant)%>
+            <td>An item in this order exceeds your inventory</td>
+          <% end %>
         </tr>
       <% end %>
     </tbody>
